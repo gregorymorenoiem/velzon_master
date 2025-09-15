@@ -104,6 +104,19 @@ export const ADD_NEW_INVOICE = "/apps/invoice";
 export const UPDATE_INVOICE = "/apps/invoice";
 export const DELETE_INVOICE = "/apps/invoice";
 
+
+// Devices
+export const GET_DEVICES = "/apps/device";
+export const GET_DEVICES_KPIS = "/apps/device-kpis";
+export const GET_DEVICES_LIST = "/apps/devices-list";
+export const ADD_NEW_DEVICE = "/apps/device";
+export const UPDATE_DEVICE = "/apps/device";
+export const DELETE_DEVICE = "/apps/device";
+
+
+
+
+
 // TicketsList
 export const GET_TICKETS_LIST = "/apps/ticket";
 export const ADD_NEW_TICKET = "/apps/ticket";

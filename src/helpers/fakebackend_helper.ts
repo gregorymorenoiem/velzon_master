@@ -240,6 +240,18 @@ export const updateInvoice = (invoice : any) => api.update(url.UPDATE_INVOICE + 
 // delete Invoice
 export const deleteInvoice = (invoice : any) => api.delete(url.DELETE_INVOICE + '/' + invoice);
 
+/**
+ * --------------------------------------------------------------------------
+ * NUEVAS FUNCIONES PARA EL MÓDULO DE DEVICES
+ * --------------------------------------------------------------------------
+ */
+
+// **Devices**
+// KPIs de devices
+export const getDevicesKpis = () => api.get(url.GET_DEVICES_KPIS);
+
+export const getDevicesList = () => api.get(url.GET_DEVICES_LIST);
+
 // Support Tickets 
 // Tickets
 export const getTicketsList = () => api.get(url.GET_TICKETS_LIST);

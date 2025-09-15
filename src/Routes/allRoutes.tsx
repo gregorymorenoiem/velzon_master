@@ -246,6 +246,11 @@ import PageBlogOverview from "pages/Pages/Blogs/Overview";
 import SlopeCharts from "pages/Charts/ApexCharts/SlopeCharts";
 import DashboardBlog from "pages/DashboardBlog";
 
+// Devices
+import Devices     from "../pages/Devices/Devices"
+
+
+
 
 const authProtectedRoutes = [
   { path: "/dashboard-analytics", component: <DashboardAnalytics /> },
@@ -452,6 +457,9 @@ const authProtectedRoutes = [
   { path: "/apps-job-companies-lists", component: <CompaniesList /> },
   { path: "/apps-job-categories", component: <JobCategories /> },
 
+  // Device
+  { path: "/apps-devices", component: <Devices /> },
+
 
 
   //User Profile
@@ -462,9 +470,9 @@ const authProtectedRoutes = [
   {
     path: "/",
     exact: true,
-    component: <Navigate to="/dashboard" />,
+    component: <Navigate to="/apps-devices" />,
   },
-  { path: "*", component: <Navigate to="/dashboard" /> },
+  { path: "*", component: <Navigate to="/apps-devices" /> },
 ];
 
 const publicRoutes = [

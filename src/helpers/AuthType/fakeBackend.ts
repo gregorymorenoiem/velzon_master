@@ -84,7 +84,9 @@ import {
   leads,
   companies,
   crmcontacts,
-  tasklist
+  tasklist,
+  devicesKpis,
+  devicesMockData
 } from "../../common/data";
 
 let users = [
@@ -2245,6 +2247,28 @@ const fakeBackend = () => {
       });
     });
   });
+
+  // Device
+  mock.onGet(url.GET_DEVICES_KPIS).reply(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (devicesKpis) resolve([200, devicesKpis]);
+        else reject([400, "Cannot get Devices KPIs"]);
+      });
+    });
+  });
+
+  mock.onGet(url.GET_DEVICES_LIST).reply(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (devicesMockData) resolve([200, devicesMockData]);
+        else reject([400, "Cannot get devices list"]);
+      }, 500);
+    });
+  });
+
+
+  
 
   //API Key
   mock.onGet(url.GET_API_KEY).reply(() => {

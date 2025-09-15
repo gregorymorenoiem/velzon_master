@@ -203,3 +203,7 @@ export {
   listData,
   gridData
 };
+
+export { devicesKpis } from "./devicesKpis";
+export { devicesMockData } from "./devicesMockData"; 
+
