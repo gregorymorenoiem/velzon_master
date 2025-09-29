@@ -1,3 +1,5 @@
+// src/common/data/devicesMockData.ts
+
 // Datos mock para la tabla de dispositivos
 const devicesMockData = [
   {
@@ -8,7 +10,9 @@ const devicesMockData = [
     meterBrand: "Brand A",
     meterSerial: "MET-001",
     status: "online",
-    lastUpdate: "2025-09-15T10:30:00Z"
+    lastUpdate: "2025-09-15T10:30:00Z",
+    lat: 18.4961,
+    lng: -69.9412
   },
   {
     id: 2,
@@ -18,7 +22,9 @@ const devicesMockData = [
     meterBrand: "Brand B",
     meterSerial: "MET-002",
     status: "offline",
-    lastUpdate: "2025-09-14T15:45:00Z"
+    lastUpdate: "2025-09-14T15:45:00Z",
+    lat: 18.4761,
+    lng: -69.9212
   },
   {
     id: 3,
@@ -28,7 +34,9 @@ const devicesMockData = [
     meterBrand: "Brand C",
     meterSerial: "MET-003",
     status: "maintenance",
-    lastUpdate: "2025-09-15T08:15:00Z"
+    lastUpdate: "2025-09-15T08:15:00Z",
+    lat: 18.4861,
+    lng: -69.9112
   },
   {
     id: 4,
@@ -38,7 +46,9 @@ const devicesMockData = [
     meterBrand: "Brand A",
     meterSerial: "MET-004",
     status: "online",
-    lastUpdate: "2025-09-15T11:20:00Z"
+    lastUpdate: "2025-09-15T11:20:00Z",
+    lat: 18.4661,
+    lng: -69.9512
   },
   {
     id: 5,
@@ -48,7 +58,9 @@ const devicesMockData = [
     meterBrand: "Brand D",
     meterSerial: "MET-005",
     status: "online",
-    lastUpdate: "2025-09-15T09:45:00Z"
+    lastUpdate: "2025-09-15T09:45:00Z",
+    lat: 18.4895,
+    lng: -69.9340
   }
 ];
 

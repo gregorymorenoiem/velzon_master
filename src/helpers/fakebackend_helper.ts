@@ -252,6 +252,26 @@ export const getDevicesKpis = () => api.get(url.GET_DEVICES_KPIS);
 
 export const getDevicesList = () => api.get(url.GET_DEVICES_LIST);
 
+export const getDevicesChartData = (params: { year: number, month: number }) => 
+    api.get(url.GET_DEVICES_CHART_DATA, { params });
+
+
+/**
+ * --------------------------------------------------------------------------
+ * FUNCIONES PARA EL MÓDULO DE ALARMS (NUEVO)
+ * --------------------------------------------------------------------------
+ */
+// KPIs de alarmas
+export const getAlarmsKpis = () => api.get(url.GET_ALARMS_KPIS);
+
+// Lista de alarmas
+export const getAlarmsList = () => api.get(url.GET_ALARMS_LIST);
+
+// Datos para los gráficos de alarmas
+export const getAlarmsChartData = () => api.get(url.GET_ALARMS_CHART_DATA);
+
+
+
 // Support Tickets 
 // Tickets
 export const getTicketsList = () => api.get(url.GET_TICKETS_LIST);

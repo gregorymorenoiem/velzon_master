@@ -75,6 +75,9 @@ import APIKeyReducer from "./apiKey/reducer";
 // Device
 import DevicesReducer from "./device/reducer";
 
+// Alarms (NUEVO)
+import AlarmsReducer from "./alarm/reducer";
+
 const rootReducer = combineReducers({
     Layout: LayoutReducer,
     Login: LoginReducer,
@@ -104,6 +107,7 @@ const rootReducer = combineReducers({
     Jobs: JobReducer,
     APIKey: APIKeyReducer,
     Devices: DevicesReducer,
+    Alarms: AlarmsReducer,
 });
 
 export default rootReducer;

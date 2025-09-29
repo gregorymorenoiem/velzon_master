@@ -51,6 +51,7 @@
     "gridjs-react": "^6.1.1",
     "i18next": "^23.16.0",
     "i18next-browser-languagedetector": "^8.0.0",
+    "leaflet": "^1.9.4",
     "moment": "^2.30.1",
     "nouislider-react": "^3.4.2",
     "prismjs": "^1.29.0",
@@ -69,6 +70,7 @@
     "react-filepond": "^7.1.2",
     "react-flatpickr": "^3.10.13",
     "react-i18next": "^15.0.3",
+    "react-leaflet": "^4.2.1",
     "react-masonry-css": "^1.0.16",
     "react-perfect-scrollbar": "^1.5.8",
     "react-quilljs": "^2.0.4",
@@ -120,7 +122,8 @@
     "autoprefixer": "10.4.5"
   },
   "devDependencies": {
-    "@types/feather-icons": "^4.29.4"
+    "@types/feather-icons": "^4.29.4",
+    "@types/leaflet": "^1.9.20"
   },
   "overrides": {
     "typescript": "^5.6.3"

@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Container, Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import { DevicesKpis, DevicesTable } from "./sections";
+import { Container, Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Col } from "reactstrap";
+import { DevicesKpis, DevicesTable, DevicesMap, DevicesChart } from "./sections";
 import DeviceWizardModal from "./sections/DeviceWizardModal";
 import DeviceTestWizardModal from "./sections/DeviceTestWizardModal";
 import SettingsModal from "./sections/SettingsModal";
 import MaintenanceModal from "./sections/MaintenanceModal";
-import { getDevicesKpis } from "../../slices/device/thunk";
+import { getDevicesKpis, getDevicesChartData } from "../../slices/device/thunk";
 import { devicesMockData } from "../../common/data/devicesMockData";
 
 const DevicesPage: React.FC = () => {
@@ -15,16 +15,27 @@ const DevicesPage: React.FC = () => {
   const navigate = useNavigate();
   
   const [devices, setDevices] = useState(devicesMockData);
-  const { kpis } = useSelector((state: any) => ({ kpis: state.Devices.kpis }));
+  
+  // CORRECCIÓN: Separar useSelector para evitar re-renderizados innecesarios.
+  const kpis = useSelector((state: any) => state.Devices.kpis);
+  const chartData = useSelector((state: any) => state.Devices.chartData);
+  const chartLoading = useSelector((state: any) => state.Devices.chartLoading);
 
+  // Filtros para la tabla
   const [yearFilter, setYearFilter] = useState<string>("all");
   const [monthFilter, setMonthFilter] = useState<string>("all");
+
+  // Filtros para el gráfico
+  const [chartYear, setChartYear] = useState<string>(() => new Date().getFullYear().toString());
+  const [chartMonth, setChartMonth] = useState<string>(() => (new Date().getMonth() + 1).toString());
   
+  // Estados para los modales
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [isTestWizardOpen, setIsTestWizardOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
 
+  // Estados para gestionar el dispositivo seleccionado en cada acción
   const [deviceToEdit, setDeviceToEdit] = useState<any | null>(null);
   const [deviceToDelete, setDeviceToDelete] = useState<any | null>(null);
   const [deviceToTest, setDeviceToTest] = useState<any | null>(null);
@@ -35,31 +46,47 @@ const DevicesPage: React.FC = () => {
     dispatch(getDevicesKpis());
   }, [dispatch]);
 
+  // Este useEffect ahora se disparará correctamente en la carga inicial
+  useEffect(() => {
+    if (chartYear && chartMonth) {
+      dispatch(getDevicesChartData({ 
+        year: parseInt(chartYear), 
+        month: parseInt(chartMonth) 
+      }));
+    }
+  }, [dispatch, chartYear, chartMonth]);
+
   const availableYears = useMemo(() => {
-    if (!devices || devices.length === 0) return [];
-    // <-- CORREGIDO: Usar 'lastUpdate' en lugar de 'installedAt' -->
+    if (!devices || devices.length === 0) return [new Date().getFullYear()];
     const years = devices.map(d => new Date(d.lastUpdate).getFullYear());
-    // <-- CORREGIDO: Usar Array.from() para compatibilidad -->
-    return Array.from(new Set(years)).sort((a, b) => b - a);
+    const uniqueYears = Array.from(new Set(years));
+    const currentYear = new Date().getFullYear();
+    if (!uniqueYears.includes(currentYear)) {
+      uniqueYears.push(currentYear);
+    }
+    return uniqueYears.sort((a, b) => b - a);
   }, [devices]);
 
   const filteredDevices = useMemo(() => {
     return devices.filter(device => {
-      // <-- CORREGIDO: Usar 'lastUpdate' en lugar de 'installedAt' -->
       if (!device.lastUpdate || isNaN(new Date(device.lastUpdate).getTime())) {
-        return true; 
+        return true;  
       }
-      // <-- CORREGIDO: Usar 'lastUpdate' en lugar de 'installedAt' -->
       const deviceDate = new Date(device.lastUpdate);
       const yearMatch = yearFilter === 'all' || deviceDate.getFullYear() === parseInt(yearFilter);
       const monthMatch = monthFilter === 'all' || (deviceDate.getMonth() + 1) === parseInt(monthFilter);
       return yearMatch && monthMatch;
     });
   }, [devices, yearFilter, monthFilter]);
-
+  
   const handleFilterChange = (filterType: 'year' | 'month', value: string) => {
     if (filterType === 'year') setYearFilter(value);
     if (filterType === 'month') setMonthFilter(value);
+  };
+  
+  const handleChartFilterChange = (filterType: 'year' | 'month', value: string) => {
+    if (filterType === 'year') setChartYear(value);
+    if (filterType === 'month') setChartMonth(value);
   };
   
   const handleClearFilters = () => {
@@ -75,7 +102,7 @@ const DevicesPage: React.FC = () => {
   const handleEditDevice = (device: any) => {
     const flatDeviceData = {
         subName: device.substation, subLat: "18.4861", subLng: "-69.9312", spKind: "Circuito", spCode: device.supplyPoint,
-        spName: `Punto de Suministro ${device.id}`, spStatus: "Active", spUnr: "", meterBrand: device.meterBrand, meterSerial: device.meterSerial,
+        spName: `Punto de Suministro ${device.id}`, spStatus: "Active", unr: "", meterBrand: device.meterBrand, meterSerial: device.meterSerial,
         meterDate: new Date(device.lastUpdate).toISOString().split("T")[0], meterBrandBackup: "", meterSerialBackup: "", meterDateBackup: "",
         mssSerial: device.mssSerial, firmware: device.firmware || "1.0.0", devDate: new Date(device.lastUpdate).toISOString().split("T")[0], devStatus: device.status,
     };
@@ -84,11 +111,21 @@ const DevicesPage: React.FC = () => {
   };
 
   const handleDeleteDevice = (device: any) => { setDeviceToDelete(device); };
-  const handleViewAlarms = (device: any) => { navigate(`/alarms?deviceId=${device.id}`); };
+  const handleViewAlarms = (device: any) => { navigate(`/apps-alarms?deviceId=${device.id}`); };
   const handleTestDevice = (device: any) => { setDeviceToTest(device); setIsTestWizardOpen(true); };
   const handleConfigureDevice = (device: any) => { setDeviceToConfigure(device); setIsSettingsModalOpen(true); };
   const handleMaintenanceDevice = (device: any) => { setDeviceForMaintenance(device); setIsMaintenanceModalOpen(true); };
   
+  const handleSaveDevice = (deviceData: any) => {
+    const now = new Date().toISOString();
+    if (deviceToEdit) {
+      setDevices(devices.map(d => (d.id === deviceToEdit.id ? { ...d, ...deviceData, lastUpdate: now } : d) ));
+    } else {
+      const newId = devices.length > 0 ? Math.max(...devices.map(d => d.id)) + 1 : 1;
+      setDevices([...devices, { ...deviceData, id: newId, lastUpdate: now }]);
+    }
+  };
+
   const handleSaveSettings = (deviceId: number, newSettings: any) => { setDevices(prev => prev.map(d => d.id === deviceId ? { ...d, ...newSettings } : d)); };
   const handleConfirmMaintenance = (deviceId: number, reason: string) => { setDevices(prev => prev.map(d => d.id === deviceId ? { ...d, status: 'maintenance', maintenanceReason: reason } : d)); };
   const handleRemoveMaintenance = (deviceId: number) => { setDevices(prev => prev.map(d => d.id === deviceId ? { ...d, status: 'online', maintenanceReason: undefined } : d)); };
@@ -100,24 +137,14 @@ const DevicesPage: React.FC = () => {
     }
   };
 
-  const handleSaveDevice = (deviceData: any) => {
-    const now = new Date().toISOString();
-    if (deviceToEdit) {
-      setDevices(devices.map(d => (d.id === deviceToEdit.id ? { ...d, ...deviceData, lastUpdate: now } : d) ));
-    } else {
-      const newId = devices.length > 0 ? Math.max(...devices.map(d => d.id)) + 1 : 1;
-      setDevices([...devices, { ...deviceData, id: newId, lastUpdate: now }]);
-    }
-  };
-  
   return (
     <div className="page-content">
       <Container fluid>
         <h4 className="mb-4">Dashboard de Dispositivos</h4>
         <DevicesKpis items={kpis} />
-        <DevicesTable 
+        <DevicesTable
           title="Listado de Dispositivos"
-          rows={filteredDevices} 
+          rows={filteredDevices}
           onAddDevice={handleAddDevice}
           onEditDevice={handleEditDevice}
           onDeleteDevice={handleDeleteDevice}
@@ -131,19 +158,34 @@ const DevicesPage: React.FC = () => {
           onFilterChange={handleFilterChange}
           onClearFilters={handleClearFilters}
         />
-
+        <DevicesMap
+          devices={filteredDevices}
+          title="Mapa de Ubicaciones de Dispositivos"
+        />
+        <Row>
+          <Col lg={12}>
+            <DevicesChart
+              data={chartData}
+              loading={chartLoading}
+              availableYears={availableYears}
+              yearFilter={chartYear}
+              monthFilter={chartMonth}
+              onFilterChange={handleChartFilterChange}
+            />
+          </Col>
+        </Row>
         {/* --- MODALES --- */}
         <DeviceWizardModal isOpen={isWizardOpen} toggle={() => setIsWizardOpen(false)} onSave={handleSaveDevice} deviceToEdit={deviceToEdit} />
         <DeviceTestWizardModal isOpen={isTestWizardOpen} toggle={() => setIsTestWizardOpen(false)} device={deviceToTest} />
         <SettingsModal isOpen={isSettingsModalOpen} toggle={() => setIsSettingsModalOpen(false)} device={deviceToConfigure} onSave={handleSaveSettings} />
         <MaintenanceModal isOpen={isMaintenanceModalOpen} toggle={() => setIsMaintenanceModalOpen(false)} device={deviceForMaintenance} onConfirm={handleConfirmMaintenance} onRemove={handleRemoveMaintenance} />
         <Modal isOpen={!!deviceToDelete} toggle={() => setDeviceToDelete(null)} centered>
-          <ModalHeader toggle={() => setDeviceToDelete(null)}> Confirmar Eliminación </ModalHeader>
-          <ModalBody> ¿Estás seguro de que deseas eliminar el dispositivo <strong>{deviceToDelete?.mssSerial}</strong>? </ModalBody>
-          <ModalFooter>
-            <Button color="light" onClick={() => setDeviceToDelete(null)}>Cancelar</Button>
-            <Button color="danger" onClick={confirmDelete}>Eliminar</Button>
-          </ModalFooter>
+            <ModalHeader toggle={() => setDeviceToDelete(null)}> Confirmar Eliminación </ModalHeader>
+            <ModalBody> ¿Estás seguro de que deseas eliminar el dispositivo <strong>{deviceToDelete?.mssSerial}</strong>? </ModalBody>
+            <ModalFooter>
+                <Button color="light" onClick={() => setDeviceToDelete(null)}>Cancelar</Button>
+                <Button color="danger" onClick={confirmDelete}>Eliminar</Button>
+            </ModalFooter>
         </Modal>
       </Container>
     </div>

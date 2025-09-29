@@ -204,6 +204,12 @@ export {
   gridData
 };
 
+// --- Devices ---
 export { devicesKpis } from "./devicesKpis";
 export { devicesMockData } from "./devicesMockData"; 
+export { devicesChartData} from "./devicesChartData"
 
+// --- Alarms ---
+export { alarmsKpisData } from "./alarmsKpisData";
+export { alarmsMockData } from "./alarmsMockData";
+export { alarmsChartData } from "./alarmsChartData";

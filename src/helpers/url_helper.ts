@@ -109,9 +109,15 @@ export const DELETE_INVOICE = "/apps/invoice";
 export const GET_DEVICES = "/apps/device";
 export const GET_DEVICES_KPIS = "/apps/device-kpis";
 export const GET_DEVICES_LIST = "/apps/devices-list";
+export const GET_DEVICES_CHART_DATA = "/apps/devices-chart-data";
 export const ADD_NEW_DEVICE = "/apps/device";
 export const UPDATE_DEVICE = "/apps/device";
 export const DELETE_DEVICE = "/apps/device";
+
+// Alarms
+export const GET_ALARMS_KPIS = "/apps/alarms-kpis";
+export const GET_ALARMS_LIST = "/apps/alarms-list";
+export const GET_ALARMS_CHART_DATA = "/apps/alarms-chart-data";
 
 
 

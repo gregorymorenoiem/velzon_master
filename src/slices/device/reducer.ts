@@ -1,28 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDevicesKpis, getDevicesList } from "./thunk"; // Modificar import
+import { getDevicesKpis, getDevicesList, getDevicesChartData } from "./thunk"; // Modificar import
 
 export interface DevicesState {
   kpis: any[];
-  devicesList: any[]; // Añadir propiedad para lista de dispositivos
+  devicesList: any[];
+  chartData: any[]; // Añadir propiedad para datos del gráfico
   loading: boolean;
+  chartLoading: boolean; // Añadir estado de carga específico para el gráfico
   error: string | null;
 }
 
 const initialState: DevicesState = {
   kpis: [],
-  devicesList: [], // Inicializar propiedad
+  devicesList: [],
+  chartData: [], // Inicializar propiedad
   loading: false,
+  chartLoading: false, // Inicializar
   error: null,
 };
 
 const devicesSlice = createSlice({
   name: "devices",
   initialState,
-  reducers: {
+ reducers: {
     resetDevices(state) {
       state.kpis = [];
-      state.devicesList = []; // Añadir reset
+      state.devicesList = [];
+      state.chartData = []; // Añadir reset
       state.loading = false;
+      state.chartLoading = false;
       state.error = null;
     },
   },
@@ -53,6 +59,19 @@ const devicesSlice = createSlice({
       .addCase(getDevicesList.rejected, (state, action) => {
         state.loading = false;
         state.error = (action.payload as any) || action.error.message || "Failed to fetch devices list";
+      })
+      // Casos nuevos para getDevicesChartData
+      .addCase(getDevicesChartData.pending, (state) => {
+        state.chartLoading = true;
+        state.error = null;
+      })
+      .addCase(getDevicesChartData.fulfilled, (state, action) => {
+        state.chartLoading = false;
+        state.chartData = (action.payload as any) ?? [];
+      })
+      .addCase(getDevicesChartData.rejected, (state, action) => {
+        state.chartLoading = false;
+        state.error = (action.payload as any) || action.error.message || "Failed to fetch chart data";
       });
   },
 });

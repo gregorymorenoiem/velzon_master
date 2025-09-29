@@ -248,6 +248,8 @@ import DashboardBlog from "pages/DashboardBlog";
 
 // Devices
 import Devices     from "../pages/Devices/Devices"
+import MapsLeaflet from "pages/Maps/MapsLeaflet/MapsLeaflet";
+import Alarms from "pages/Alarms/Alarms";
 
 
 
@@ -427,6 +429,7 @@ const authProtectedRoutes = [
 
   // //Maps
   { path: "/maps-google", component: <GoogleMaps /> },
+  { path: "/maps-leaflet", component: <MapsLeaflet /> },
 
   // //Pages
   { path: "/pages-starter", component: <Starter /> },
@@ -459,6 +462,7 @@ const authProtectedRoutes = [
 
   // Device
   { path: "/apps-devices", component: <Devices /> },
+    { path: "/apps-alarms", component: <Alarms /> },
 
 
 

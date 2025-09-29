@@ -1,0 +1,58 @@
+// src/common/data/alarmsMockData.ts
+
+// Datos simulados para la tabla de alarmas.
+const alarmsMockData = [
+  {
+    id: 1,
+    code: "OVERVOLTAGE",
+    description: "Sobretensión detectada en la fase A.",
+    substation: "Subestación Norte",
+    detected: "2025-09-28T10:30:00Z",
+    cleared: "2025-09-28T11:15:00Z",
+    status: "cleared",
+    severity: "media",
+  },
+  {
+    id: 2,
+    code: "TEMP_HIGH",
+    description: "Temperatura del gabinete excede el umbral.",
+    substation: "Subestación Sur",
+    detected: "2025-09-28T08:00:00Z",
+    cleared: null,
+    status: "active",
+    severity: "alta",
+  },
+  {
+    id: 3,
+    code: "PHASE_LOSS",
+    description: "Pérdida de fase detectada.",
+    substation: "Subestación Este",
+    detected: "2025-09-27T15:45:00Z",
+    cleared: null,
+    status: "active",
+    severity: "alta",
+  },
+  {
+    id: 4,
+    code: "COMM_FAIL",
+    description: "Fallo de comunicación con el medidor.",
+    substation: "Subestación Oeste",
+    detected: "2025-09-26T11:20:00Z",
+    cleared: "2025-09-26T12:00:00Z",
+    status: "cleared",
+    severity: "baja",
+  },
+  {
+    id: 5,
+    code: "UNDERVOLTAGE",
+    description: "Baja tensión en la fase C.",
+    substation: "Subestación Central",
+    detected: "2025-09-28T05:10:00Z",
+    cleared: null,
+    status: "active",
+    severity: "media",
+  },
+
+];
+
+export { alarmsMockData };

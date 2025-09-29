@@ -86,8 +86,14 @@ import {
   crmcontacts,
   tasklist,
   devicesKpis,
-  devicesMockData
+  devicesMockData,
+  devicesChartData,
+  alarmsKpisData,
+  alarmsMockData,
+  alarmsChartData
 } from "../../common/data";
+
+
 
 let users = [
   {
@@ -2268,6 +2274,67 @@ const fakeBackend = () => {
   });
 
 
+// Mock para los datos del gráfico de dispositivos
+mock.onGet(new RegExp(url.GET_DEVICES_CHART_DATA)).reply((config) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        // Los parámetros (year, month) se leen de 'config.params'
+        const { year, month } = config.params;
+
+        if (!year || !month) {
+          return reject([400, "Year and month parameters are required"]);
+        }
+        
+        // Se crea el prefijo para buscar en los datos simulados
+        const monthString = String(month).padStart(2, '0');
+        const searchPrefix = `${year}-${monthString}`;
+        
+        // Se filtran los datos para devolver solo los del mes y año solicitados
+        const data = Array.isArray(devicesChartData)
+          ? devicesChartData.filter(item => item.date.startsWith(searchPrefix))
+          : [];
+        
+        resolve([200, data]);
+
+      } catch (error) {
+        reject([500, "Failed to process chart data request"]);
+      }
+    }, 300); // Pequeño delay para simular una llamada de red
+  });
+});
+
+
+
+// --- AÑADIR NUEVOS MOCKS PARA ALARMAS ---
+
+// Alarms
+mock.onGet(url.GET_ALARMS_KPIS).reply(() => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (alarmsKpisData) resolve([200, alarmsKpisData]);
+      else reject([400, "Cannot get Alarms KPIs"]);
+    }, 200);
+  });
+});
+
+mock.onGet(url.GET_ALARMS_LIST).reply(() => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (alarmsMockData) resolve([200, alarmsMockData]);
+      else reject([400, "Cannot get alarms list"]);
+    }, 500);
+  });
+});
+
+mock.onGet(url.GET_ALARMS_CHART_DATA).reply(() => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (alarmsChartData) resolve([200, alarmsChartData]);
+        else reject([400, "Cannot get alarms chart data"]);
+      }, 300);
+    });
+  });
   
 
   //API Key

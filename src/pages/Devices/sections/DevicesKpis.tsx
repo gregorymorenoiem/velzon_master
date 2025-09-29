@@ -53,9 +53,9 @@ const DevicesKpis: React.FC<DevicesKpisProps> = ({ items }) => {
                       suffix={item.suffix || ""}
                     />
                   </h4>
-                  {/* {item.badge && (
+                  {item.badge && (
                     <span className="badge bg-warning me-1">{item.badge}</span>
-                  )}{" "} */}
+                  )}{" "}
                   {item.caption && (
                     <span className="text-muted">{item.caption}</span>
                   )}
