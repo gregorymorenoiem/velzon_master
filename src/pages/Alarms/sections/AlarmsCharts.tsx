@@ -31,7 +31,7 @@ const AlarmsCharts: React.FC<AlarmsChartsProps> = ({ monthlyData, distributionDa
 
   return (
     <Row>
-      <Col lg={8}>
+      <Col lg={12}>
         <Card>
           <CardHeader>
             <h4 className="card-title mb-0">Alarmas por Día</h4>
@@ -41,7 +41,7 @@ const AlarmsCharts: React.FC<AlarmsChartsProps> = ({ monthlyData, distributionDa
           </CardBody>
         </Card>
       </Col>
-      <Col lg={4}>
+      {/* <Col lg={4}>
         <Card>
           <CardHeader>
             <h4 className="card-title mb-0">Distribución por Tipo</h4>
@@ -50,7 +50,7 @@ const AlarmsCharts: React.FC<AlarmsChartsProps> = ({ monthlyData, distributionDa
             <ReactApexChart options={pieChartOptions} series={pieChartSeries} type="pie" height={350} />
           </CardBody>
         </Card>
-      </Col>
+      </Col> */}
     </Row>
   );
 };

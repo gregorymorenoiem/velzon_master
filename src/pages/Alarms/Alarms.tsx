@@ -5,6 +5,7 @@ import { Container, Row, Col } from "reactstrap";
 import { getAlarmsKpis, getAlarmsList, getAlarmsChartData } from "../../slices/alarm/thunk";
 import { AlarmsKpis, AlarmsTable, AlarmsCharts, AlarmsTelemetry, AlarmsControls } from "./sections";
 import { devicesMockData } from "../../common/data"; // <-- PASO 1: IMPORTAR DATOS DE DISPOSITIVOS
+import StoreVisits from "./StoreVisits";
 
 const AlarmsPage: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -95,8 +96,10 @@ const AlarmsPage: React.FC = () => {
         <h4 className="mb-4">{pageTitle}</h4>
         
         <AlarmsKpis items={kpis} />
-        
-        <Row className="mt-4">
+
+      <Row className="mt-4">
+
+
           <Col lg={12}>
             <AlarmsTable
               alarms={filteredAlarms}
@@ -108,27 +111,29 @@ const AlarmsPage: React.FC = () => {
               onClearFilters={handleClearFilters}
             />
           </Col>
-        </Row>
 
+      </Row>
+
+        <Row className="mt-4">
+            <Col lg={9}>
+                <AlarmsTelemetry 
+                    temperatureData={chartData.temperatureSeries}
+                    batteryData={chartData.batterySeries}
+                />
+            </Col>
+            <Col lg={3} className="d-flex">
+                <AlarmsControls />
+            </Col>
+        </Row>
+{/* 
         <Row className="mt-4">
             <AlarmsCharts 
                 monthlyData={chartData.monthlyStats} 
                 distributionData={chartData.codeDistribution} 
             />
-        </Row>
+        </Row> */}
         
-    <Row className="mt-4">
-          <Col lg={8}>
-              <AlarmsTelemetry 
-                  temperatureData={chartData.temperatureSeries}
-                  batteryData={chartData.batterySeries}
-              />
-          </Col>
-          {/* MODIFICACIÓN AQUÍ: Se añade la clase d-flex */}
-          <Col lg={4} className="d-flex">
-              <AlarmsControls />
-          </Col>
-      </Row>
+
       </Container>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   CardHeader,
@@ -53,7 +53,7 @@ const DevicesTable: React.FC<Props> = ({
       {
         header: "MSS SERIAL",
         accessorKey: "mssSerial",
-        enableColumnFilter: false, // <-- Esto es lo que deshabilita el filtro para la columna
+        enableColumnFilter: false,
         cell: (cell: any) => <span className="fw-semibold">{cell.getValue()}</span>,
       },
       {
@@ -122,6 +122,21 @@ const DevicesTable: React.FC<Props> = ({
     { label: 'Octubre', value: 10 }, { label: 'Noviembre', value: 11 }, { label: 'Diciembre', value: 12 },
   ];
 
+  // NUEVO: Estado para el término de búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // NUEVO: Lógica para filtrar los datos basados en el término de búsqueda
+  const filteredData = useMemo(() => {
+    if (!searchTerm) {
+      return rows;
+    }
+    return rows.filter(row =>
+      Object.values(row).some(value =>
+        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [rows, searchTerm]);
+
   return (
     <Col lg={12}>
       <Card id="devicesList">
@@ -136,40 +151,67 @@ const DevicesTable: React.FC<Props> = ({
           </div>
         </CardHeader>
 
+        {/* --- SECCIÓN MODIFICADA --- */}
         <CardBody className="border border-dashed border-end-0 border-start-0">
-          <div className="d-flex flex-wrap align-items-center gap-3">
-            <div className="flex-shrink-0">
-                <Label className="mb-0">Filtrar por fecha:</Label>
-            </div>
-            <div style={{minWidth: "150px"}}>
-                <Input type="select" value={yearFilter} onChange={(e) => onFilterChange('year', e.target.value)}>
-                    <option value="all">Todos los Años</option>
-                    {availableYears.map(year => <option key={year} value={year}>{year}</option>)}
-                </Input>
-            </div>
-             <div style={{minWidth: "150px"}}>
-                <Input type="select" value={monthFilter} onChange={(e) => onFilterChange('month', e.target.value)}>
-                    <option value="all">Todos los Meses</option>
-                    {months.map(month => <option key={month.value} value={month.value}>{month.label}</option>)}
-                </Input>
-            </div>
-            <div className="flex-shrink-0">
-                <Button color="primary" onClick={onClearFilters}>
-                    <i className="ri-refresh-line align-bottom me-1"></i> Limpiar Filtros
-                </Button>
-            </div>
+          {/* Contenedor Flex para alinear filtros y búsqueda */}
+          <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        {/* Campo de búsqueda a la derecha */}
+            <Col lg={5}>
+              <div className="flex-shrink-0">
+                <div className="search-box">
+                  <Input
+                    type="text"
+                    className="form-control"
+                    placeholder="Buscar en la tabla..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <i className="ri-search-line search-icon"></i>
+                </div>
+              </div>
+            </Col>
+            <Col lg={6}>
+
+                {/* Grupo de filtros de fecha a la izquierda */}
+                <div className="d-flex flex-wrap align-items-center gap-3">
+                  <div className="flex-shrink-0">
+                    <Label className="mb-0">Filtrar por fecha:</Label>
+                  </div>
+                  <div style={{ minWidth: "150px" }}>
+                    <Input type="select" value={yearFilter} onChange={(e) => onFilterChange('year', e.target.value)}>
+                      <option value="all">Todos los Años</option>
+                      {availableYears.map(year => <option key={year} value={year}>{year}</option>)}
+                    </Input>
+                  </div>
+                  <div style={{ minWidth: "150px" }}>
+                    <Input type="select" value={monthFilter} onChange={(e) => onFilterChange('month', e.target.value)}>
+                      <option value="all">Todos los Meses</option>
+                      {months.map(month => <option key={month.value} value={month.value}>{month.label}</option>)}
+                    </Input>
+                  </div>
+                  <div className="flex-shrink-0">
+                    <Button color="primary" onClick={onClearFilters}>
+                      <i className="ri-refresh-line align-bottom me-1"></i> Limpiar Filtros
+                    </Button>
+                  </div>
+                </div>
+            </Col>
+
+            
+
           </div>
         </CardBody>
+        {/* --- FIN DE LA SECCIÓN MODIFICADA --- */}
 
         <CardBody className="pt-0">
-          {rows && rows.length > 0 ? (
+          {/* Usar 'filteredData' para verificar si hay filas y para pasar a la tabla */}
+          {filteredData && filteredData.length > 0 ? (
             <TableContainer
               columns={columns}
-              data={rows}
-              isGlobalFilter={true}
+              data={filteredData} // Pasar los datos ya filtrados
+              isGlobalFilter={false} // Deshabilitar el filtro interno
               customPageSize={10}
               theadClass="text-muted text-uppercase"
-              SearchPlaceholder="Buscar en la tabla..."
             />
           ) : (
             <div className="text-center py-5">
@@ -180,7 +222,7 @@ const DevicesTable: React.FC<Props> = ({
               </div>
               <h5 className="mt-2">No se encontraron dispositivos</h5>
               <p className="text-muted">
-                Intenta ajustar tus filtros o añade un nuevo dispositivo.
+                Intenta ajustar tus filtros, limpiar la búsqueda o añade un nuevo dispositivo.
               </p>
             </div>
           )}

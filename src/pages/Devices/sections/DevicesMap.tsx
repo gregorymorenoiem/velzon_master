@@ -80,22 +80,47 @@ const DevicesMap: React.FC<DevicesMapProps> = ({ devices, title = "Mapa de Ubica
       <CardHeader><h4 className="card-title mb-0">{title}</h4></CardHeader>
       <CardBody>
         <Row className="mb-3">
-          <Col lg={4}>
-            <Label htmlFor="mapStatusFilter">Filtrar por Estado</Label>
-            <Input type="select" id="mapStatusFilter" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
-              <option value="all">Todos los estados</option>
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
-              <option value="maintenance">Mantenimiento</option>
+<div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+    {/* Campo de búsqueda a la izquierda */}
+    <div className="search-box flex-grow-1 me-3">
+        <Input
+            type="text"
+            id="mapSearchFilter"
+            className="form-control"
+            placeholder="Buscar por serial, subestación..."
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+        />
+        {/* Este ícono es parte del estilo anterior, asumiendo que tienes el CSS para .search-box */}
+        <i className="ri-search-line search-icon"></i>
+    </div>
+
+    {/* Grupo de filtros y botón a la derecha */}
+    <div className="d-flex flex-wrap align-items-center gap-3">
+        {/* Filtro por Estado */}
+        <div style={{ minWidth: "180px" }}>
+            <Input
+                type="select"
+                id="mapStatusFilter"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+            >
+                <option value="all">Todos los estados</option>
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+                <option value="maintenance">Mantenimiento</option>
             </Input>
-          </Col>
-          <Col lg={4}>
-            <Label htmlFor="mapSearchFilter">Buscar en Mapa</Label>
-            <Input type="text" id="mapSearchFilter" placeholder="Buscar por serial, subestación..." value={searchFilter} onChange={(e) => setSearchFilter(e.target.value)} />
-          </Col>
-          <Col lg={4} className="d-flex align-items-end">
-            <Button color="light" onClick={clearFilters} className="w-100"><i className="ri-refresh-line me-1"></i> Limpiar Filtros</Button>
-          </Col>
+        </div>
+
+        {/* Botón para limpiar filtros */}
+        <div className="flex-shrink-0">
+            {/* Se cambió el color a 'primary' y el texto para coincidir con el estilo anterior */}
+            <Button color="primary" onClick={clearFilters}>
+                <i className="ri-refresh-line me-1"></i> Limpiar
+            </Button>
+        </div>
+    </div>
+</div>
         </Row>
         <div style={{ height: "450px", width: "100%", borderRadius: "0.25rem", overflow: "hidden" }}>
           <MapContainer center={[18.4861, -69.9312]} zoom={13} style={{ height: "100%", width: "100%" }}>
@@ -119,7 +144,7 @@ const DevicesMap: React.FC<DevicesMapProps> = ({ devices, title = "Mapa de Ubica
             ))}
           </MapContainer>
         </div>
-        <div className="mt-3">
+        {/* <div className="mt-3">
           <div className="d-flex justify-content-center flex-wrap gap-4">
             {Object.entries(statusColors).map(([status, color]) => (
               <div key={status} className="d-flex align-items-center">
@@ -128,7 +153,7 @@ const DevicesMap: React.FC<DevicesMapProps> = ({ devices, title = "Mapa de Ubica
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
       </CardBody>
     </Card>
   );

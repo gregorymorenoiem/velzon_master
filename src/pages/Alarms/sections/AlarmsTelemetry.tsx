@@ -34,7 +34,7 @@ const AlarmsTelemetry: React.FC<AlarmsTelemetryProps> = ({ temperatureData, batt
             <h4 className="card-title mb-0">Temperatura (24h)</h4>
           </CardHeader>
           <CardBody>
-            <ReactApexChart options={tempOptions} series={tempSeries} type="line" height={250} />
+            <ReactApexChart options={tempOptions} series={tempSeries} type="line" height={180} />
           </CardBody>
         </Card>
       </Col>
@@ -44,7 +44,7 @@ const AlarmsTelemetry: React.FC<AlarmsTelemetryProps> = ({ temperatureData, batt
             <h4 className="card-title mb-0">Voltaje Batería (24h)</h4>
           </CardHeader>
           <CardBody>
-            <ReactApexChart options={battOptions} series={battSeries} type="line" height={250} />
+            <ReactApexChart options={battOptions} series={battSeries} type="line" height={180} />
           </CardBody>
         </Card>
       </Col>
